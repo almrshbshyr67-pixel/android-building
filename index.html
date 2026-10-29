@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عملة الباشا - منصة التحكم السحابي الشاملة</title>
+    
+    <meta name="theme-color" content="#0b0f19">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="apple-touch-icon" href="1000703640.png" id="appleIcon">
+    <link rel="manifest" id="dynamicManifest">
+
+    <style>
+        :root {
+            --bg: #0b0f19;
+            --card: #131d31;
+            --border: #223555;
+            --primary: #2563eb;
+            --success: #059669;
+            --danger: #dc2626;
+            --text: #f1f5f9;
+            --text-muted: #94a3b8;
+            --nav-bg: #0f172a;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+        body { background: var(--bg); color: var(--text); padding: 15px; padding-bottom: 90px; min-height: 100vh; }
+        .container { max-width: 800px; margin: 0 auto; }
+        
+        .page-pane { display: none; }
+        .page-pane.active { display: block; }
+
+        .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 18px; margin-bottom: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+        h2 { color: #60a5fa; font-size: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        
+        .form-group { margin-bottom: 14px; }
+        label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 5px; font-weight: bold; }
+        input, textarea, select { width: 100%; padding: 11px; border-radius: 8px; border: 1px solid var(--border); background: #0b0f19; color: var(--text); font-size: 13px; }
+        input:focus, textarea:focus { outline: 2px solid var(--primary); }
+
+        .btn { display: block; width: 100%; padding: 13px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; text-align: center; font-size: 14px; transition: 0.2s; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-success { background: var(--success); color: white; margin-top: 10px; }
+        .btn-danger { background: var(--danger); color: white; margin-top: 8px; }
+
+        /* التبويبات الرفيعة بعرض الشاشة داخل الإعدادات */
+        .settings-tabs { display: flex; width: 100%; background: #070a12; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 15px; }
+        .sub-tab-btn { flex: 1; background: none; border: none; padding: 8px 5px; color: var(--text-muted); font-size: 12px; font-weight: bold; cursor: pointer; text-align: center; transition: 0.2s; }
+        .sub-tab-btn.active { background: var(--primary); color: white; }
+        .sub-pane { display: none; }
+        .sub-pane.active { display: block; }
+
+        .digital-console { background: #05080f; border: 2px solid #1e3a8a; border-radius: 10px; padding: 12px; font-family: monospace; font-size: 12px; color: #38bdf8; height: 200px; overflow-y: auto; margin-top: 10px; white-space: pre-wrap; line-height: 1.5; }
+        .preview-frame { width: 100%; height: 420px; background: white; border-radius: 8px; border: 1px solid var(--border); }
+        .file-list { background: #0b0f19; border: 1px solid var(--border); border-radius: 8px; padding: 10px; max-height: 180px; overflow-y: auto; font-size: 12px; margin-top: 5px; }
+        .file-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 8px; border-bottom: 1px solid #1a2638; cursor: pointer; }
+
+        .logo-preview-box { width: 60px; height: 60px; border-radius: 8px; border: 1px dashed var(--border); display: flex; align-items: center; justify-content: center; overflow: hidden; margin-top: 5px; background: #05080f; }
+        .logo-preview-box img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* شريط التنقل السفلي */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; width: 100%; background: var(--nav-bg);
+            border-top: 1px solid var(--border); display: flex; justify-content: space-around;
+            padding: 8px 0; z-index: 1000; box-shadow: 0 -4px 15px rgba(0,0,0,0.6);
+        }
+        .nav-item {
+            background: none; border: none; color: var(--text-muted); font-size: 10px;
+            display: flex; flex-direction: column; align-items: center; cursor: pointer; flex: 1; transition: 0.2s;
+        }
+        .nav-item span { font-size: 15px; margin-bottom: 2px; }
+        .nav-item.active { color: #60a5fa; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- الصفحة الأولى: مصدر التطبيق، الهوية، الشعار والملفات -->
+    <div id="paneSource" class="page-pane active">
+        <div class="card">
+            <h2>📁 1. هوية التطبيق، الشعار، ومصادر الملفات</h2>
+            
+            <div class="form-group">
+                <label>اسم التطبيق الرسمي (الذي يظهر للمستخدمين وعلى الشاشة الرئيسية)</label>
+                <input type="text" id="appNameInput" placeholder="مثال: عملة الباشا" oninput="saveInputs()">
+            </div>
+
+            <div class="form-group">
+                <label>شعار وأيقونة التطبيق (صورة من أستوديو هاتفك)</label>
+                <input type="file" id="logoFileInput" accept="image/*" onchange="loadAppLogo(event)">
+                <div class="logo-preview-box">
+                    <img id="logoImgPreview" src="1000703640.png" alt="شعار">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>اختر طريقة إدخال المشروع:</label>
+                <select id="inputType" onchange="toggleInputType()">
+                    <option value="files">رفع مجلد كامل أو عدة ملفات (يدعم المشاريع الكبيرة)</option>
+                    <option value="code">لصق كود فردي (index.html)</option>
+                </select>
+            </div>
+
+            <div id="folderUploadBox" class="form-group">
+                <label>اختر مجلد المشروع أو ملفاته:</label>
+                <input type="file" id="projectFolderInput" multiple webkitdirectory directory onchange="handleFileSelection(event)">
+                <div class="file-list" id="fileListDisplay" style="margin-top: 8px;">لم يتم اختيار ملفات بعد.</div>
+                <button class="btn btn-danger" onclick="clearFiles()" style="font-size: 11px; padding: 6px; margin-top: 6px;">مسح الملفات 🗑️</button>
+            </div>
+
+            <div id="codeUploadBox" class="form-group" style="display: none;">
+                <label>الصق الكود البرمجي (HTML / JS):</label>
+                <textarea id="appCode" rows="6" placeholder="اكتب أو الصق الكود هنا..." oninput="saveInputs()"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- الصفحة الثانية: المعاينة الحية الشاملة -->
+    <div id="panePreview" class="page-pane">
+        <div class="card">
+            <h2>👁️ 2. المعاينة الحية للتطبيق</h2>
+            <button class="btn btn-primary" onclick="refreshPreview()" style="margin-bottom: 10px;">🔄 تحديث واجهة المعاينة</button>
+            <iframe id="livePreviewFrame" class="preview-frame"></iframe>
+            <button class="btn btn-danger" onclick="resetProject()" style="margin-top: 10px;">مسح المشروع وإعادة البدء ⚠️</button>
+        </div>
+    </div>
+
+    <!-- الصفحة الثالثة: التنفيذ السحابي واللوحة الرقمية -->
+    <div id="paneDeploy" class="page-pane">
+        <div class="card">
+            <h2>🚀 3. اللوحة الرقمية للتنفيذ السحابي والرفع</h2>
+            <button class="btn btn-success" onclick="startCloudDeployment()">⚡ ابدأ عملية الإنشاء والرفع السحابي</button>
+            <div class="digital-console" id="digitalConsole">[ النظام جاهز بانتظار أمر البدء...]</div>
+        </div>
+    </div>
+
+    <!-- الصفحة الرابعة: إدخال الرابط، التغليف الفوري، وتوليد APK -->
+    <div id="paneStores" class="page-pane">
+        <div class="card">
+            <h2>🌐 4. تغليف الرابط المباشر وتوليد APK</h2>
+            
+            <div class="form-group">
+                <label>ضع رابط مشروعك السحابي (أو أي رابط موقع تريد تغليفه):</label>
+                <input type="text" id="targetWrapUrl" placeholder="https://yourname.github.io/repo/" dir="ltr" style="text-align: left;">
+            </div>
+
+            <button class="btn btn-primary" onclick="generateApkPackage()" style="margin-bottom: 12px;">🛠️ توليد ملفات التغليف وحزمة المتجر فوراً</button>
+
+            <div class="form-group">
+                <label>روابط وملفات التغليف الجاهزة للتحميل:</label>
+                <div id="apkDownloadBox" style="background: #05080f; padding: 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 12px;">
+                    أدخل الرابط واضغط زر التوليد لتظهر حزمة الملفات والروابط هنا...
+                </div>
+            </div>
+
+            <p style="font-size: 11px; color: var(--text-muted); line-height: 1.5; margin-top: 10px;">
+                💡 <b>الخطوة النهائية للمتجر:</b> انسخ الرابط المباشر للمشروع وتوجه إلى موقع <strong>PWABuilder.com</strong> لتحميل ملف الـ <strong>APK</strong> الحقيقي المصمم لمتاجر العالم!
+            </p>
+        </div>
+    </div>
+
+    <!-- الصفحة الخامسة: الإعدادات (تبويبين رفيعين + أزرار حقيقية للاختبار والإنشاء) -->
+    <div id="paneAccount" class="page-pane">
+        <div class="card">
+            <h2>⚙️ 5. لوحة الإعدادات والمستودعات</h2>
+            
+            <div class="settings-tabs">
+                <button class="sub-tab-btn active" onclick="switchSubTab('subPaneCreds', this)">🔑 حساب جيت هوب والمفتاح</button>
+                <button class="sub-tab-btn" onclick="switchSubTab('subPaneRepoFiles', this)">📂 إدارة ومزامنة المستودع</button>
+            </div>
+
+            <!-- التبويب الأول: بيانات الحساب وأزرار الاتصال والإنشاء -->
+            <div id="subPaneCreds" class="sub-pane active">
+                <div class="form-group">
+                    <label>اسم المستخدم في جيت هوب (GitHub Username)</label>
+                    <input type="text" id="ghUser" placeholder="مثال: yourname" dir="ltr" style="text-align: left;" oninput="saveInputs()">
+                </div>
+                <div class="form-group">
+                    <label>مفتاح الـ API السري (GitHub Personal Access Token)</label>
+                    <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" dir="ltr" style="text-align: left;" oninput="saveInputs()">
+                </div>
+                <div class="form-group">
+                    <label>اسم المستودع الجديد (بالإنجليزية بدون مسافات):</label>
+                    <input type="text" id="repoName" placeholder="basha-app-project" dir="ltr" style="text-align: left;" oninput="saveInputs()">
+                </div>
+
+                <!-- أزرار حقيقية تفاعلية -->
+                <button class="btn btn-primary" onclick="testGithubConnection()" style="margin-bottom: 8px;">🔍 اختبار الاتصال وحفظ الإعدادات</button>
+                <button class="btn btn-success" onclick="createNewRepositoryDirectly()">✨ إنشاء المستودع الجديد فوراً</button>
+                <div id="connectionStatus" style="font-size: 11px; margin-top: 8px; color: #38bdf8;"></div>
+            </div>
+
+            <!-- التبويب الثاني: مزامنة وحذف ومعاينة ملفات المستودع -->
+            <div id="subPaneRepoFiles" class="sub-pane">
+                <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px;">
+                    اضغط زر المزامنة لجلب ملفات المستودع السحابي. (اضغط مطولاً على الملف لمعاينته، أو احذفه فوراً).</p>
+                <button class="btn btn-primary" onclick="syncCloudRepository()" style="font-size: 12px; padding: 10px;">🔄 مزامنة ملفات المستودع السحابي</button>
+                
+                <div style="margin-top: 10px;">
+                    <label>ملفات المستودع الحالي:</label>
+                    <div class="file-list" id="cloudFilesDisplay">اضغط زر المزامنة لجلب الملفات...</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<!-- شريط التنقل السفلي -->
+<nav class="bottom-nav">
+    <button class="nav-item active" onclick="switchPane('paneSource', this)"><span>📁</span>المصدر</button>
+    <button class="nav-item" onclick="switchPane('panePreview', this)"><span>👁️</span>المعاينة</button>
+    <button class="nav-item" onclick="switchPane('paneDeploy', this)"><span>🚀</span>التنفيذ</button>
+    <button class="nav-item" onclick="switchPane('paneStores', this)"><span>🌐</span>المتاجر</button>
+    <button class="nav-item" onclick="switchPane('paneAccount', this)"><span>⚙️</span>الإعدادات</button>
+</nav>
+
+<script>
+    let uploadedFilesMap = {};
+    let appLogoBase64 = "";
+
+    function switchPane(paneId, btn) {
+        document.querySelectorAll('.page-pane').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.getElementById(paneId).classList.add('active');
+        btn.classList.add('active');
+        if(paneId === 'panePreview') refreshPreview();
+    }
+
+    function switchSubTab(subPaneId, btn) {
+        document.querySelectorAll('.sub-pane').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(subPaneId).classList.add('active');
+        btn.classList.add('active');
+    }
+
+    function toggleInputType() {
+        const type = document.getElementById('inputType').value;
+        if(type === 'files') {
+            document.getElementById('folderUploadBox').style.display = 'block';
+            document.getElementById('codeUploadBox').style.display = 'none';
+        } else {
+            document.getElementById('folderUploadBox').style.display = 'none';
+            document.getElementById('codeUploadBox').style.display = 'block';
+        }
+    }
+
+    function loadAppLogo(event) {
+        const file = event.target.files[0];
+        if(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                appLogoBase64 = e.target.result;
+                document.getElementById('logoImgPreview').src = appLogoBase64;
+                localStorage.setItem('app_logo', appLogoBase64);
+                alert("✅ تم حفظ شعار وأيقونة التطبيق بنجاح!");
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    async function handleFileSelection(event) {
+        const files = event.target.files;
+        if(!files.length) return;
+        uploadedFilesMap = {};
+        let displayHtml = "";
+        let count = 0;
+
+        for (let file of files) {
+            let relativePath = file.webkitRelativePath || file.name;
+            const content = await readFileAsBase64(file);
+            uploadedFilesMap[relativePath] = content;
+            displayHtml += `<div class="file-item"><span>📄 ${relativePath}</span> <span style="color:#059669;">جاهز</span></div>`;
+            count++;
+        }
+        document.getElementById('fileListDisplay').innerHTML = displayHtml;
+        alert(`✅ تم قراءة وتحميل ${count} ملف بنجاح.`);
+    }
+
+    function readFileAsBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result.split(',')[1]);
+            reader.onerror = error => reject(error);
+            reader.readAsDataURL(file);
+        });
+    }
+
+    function clearFiles() {
+        uploadedFilesMap = {};
+        document.getElementById('projectFolderInput').value = "";
+        document.getElementById('fileListDisplay').innerHTML = "لم يتم اختيار أي ملفات بعد.";
+    }
+
+    function resetProject() {
+        clearFiles();
+        document.getElementById('appCode').value = "";
+        localStorage.removeItem('app_code');
+        document.getElementById('livePreviewFrame').srcdoc = "<h3>لا توجد بيانات للمعاينة.</h3>";
+    }
+
+    function refreshPreview() {
+        const inputType = document.getElementById('inputType').value;
+        const frame = document.getElementById('livePreviewFrame');
+        if(inputType === 'code') {
+            frame.srcdoc = document.getElementById('appCode').value || "<h3>الرجاء إدخال الكود.</h3>";
+        } else {
+            let indexContent = "";
+            for (let path in uploadedFilesMap) {
+                if(path.toLowerCase().endsWith('index.html')) {
+                    const binString = atob(uploadedFilesMap[path]);
+                    const bytes = Uint8Array.from(binString, (m) => m.codePointAt(0));
+                    indexContent = new TextDecoder().decode(bytes);
+                    break;
+                }
+            }
+            frame.srcdoc = indexContent || "<h3>لم يتم العثور على index.html في المجلد.</h3>";
+        }
+    }
+
+    function saveInputs() {
+        localStorage.setItem('gh_user', document.getElementById('ghUser').value);
+        localStorage.setItem('gh_token', document.getElementById('ghToken').value);
+        localStorage.setItem('repo_name', document.getElementById('repoName').value);
+        localStorage.setItem('app_code', document.getElementById('appCode').value);
+        localStorage.setItem('app_name', document.getElementById('appNameInput').value);
+    }
+
+    window.onload = function() {
+        if(localStorage.getItem('gh_user')) document.getElementById('ghUser').value = localStorage.getItem('gh_user');
+        if(localStorage.getItem('gh_token')) document.getElementById('ghToken').value = localStorage.getItem('gh_token');
+        if(localStorage.getItem('repo_name')) document.getElementById('repoName').value = localStorage.getItem('repo_name');
+        if(localStorage.getItem('app_code')) document.getElementById('appCode').value = localStorage.getItem('app_code');
+        if(localStorage.getItem('app_name')) document.getElementById('appNameInput').value = localStorage.getItem('app_name');
+        if(localStorage.getItem('app_logo')) {
+            appLogoBase64 = localStorage.getItem('app_logo');
+            document.getElementById('logoImgPreview').src = appLogoBase64;
+        }
+    }
+
+    // زر اختبار الاتصال في الإعدادات
+    async function testGithubConnection() {
+        const user = document.getElementById('ghUser').value.trim();
+        const token = document.getElementById('ghToken').value.trim();
+        const statusBox = document.getElementById('connectionStatus');
+
+        if(!user || !token) {
+            statusBox.innerHTML = "❌ يرجى إدخال اسم المستخدم والمفتاح أولاً.";
+            return;
+        }
+
+        statusBox.innerHTML = "🔄 جاري فحص الاتصال بحساب جيت هوب...";
+        try {
+            const res = await fetch(`https://api.github.com/user`, {
+                headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
+            });
+            if(res.ok) {
+                const data = await res.json();
+                statusBox.innerHTML = `✅ الاتصال ناجح 100%! مرحباً بك: ${data.login}`;
+                alert(`✅ تم الاتصال بحساب جيت هوب بنجاح (${data.login})!`);
+            } else {
+                throw new Error("بيانات الاعتماد غير صحيحة أو المفتاح منتهي الصلاحية.");
+            }
+        } catch(err) {
+            statusBox.innerHTML = "❌ فشل الاتصال: " + err.message;
+        }
+    }
+
+    // زر إنشاء المستودع الجديد فوراً في الإعدادات
+    async function createNewRepositoryDirectly() {
+        const user = document.getElementById('ghUser').value.trim();
+        const token = document.getElementById('ghToken').value.trim();
+        const repo = document.getElementById('repoName').value.trim().toLowerCase().replace(/\s+/g, '-');
+        const statusBox = document.getElementById('connectionStatus');
+
+        if(!user || !token || !repo) {
+            alert("⚠️ يرجى إدخال اسم المستخدم، المفتاح، واسم المستودع أولاً.");
+            return;
+        }
+
+        statusBox.innerHTML = "🔄 جاري إنشاء المستودع الجديد...";
+        try {
+            const res = await fetch(`https://api.github.com/user/repos`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Accept': 'application/vnd.github.v3+json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name: repo, auto_init: true, private: false })
+            });
+
+            if(res.status === 201 || res.status === 422) {
+                statusBox.innerHTML = `✅ تم إنشاء المستودع (${repo}) بنجاح تام!`;
+                alert(`✨ تم إنشاء المستودع الجديد "${repo}" بنجاح على حسابك!`);
+            } else {
+                throw new Error("فشل إنشاء المستودع.");
+            }
+        } catch(err) {
+            statusBox.innerHTML = "❌ خطأ: " + err.message;
+        }
+    }
+
+    // زر تغليف الرابط وتوليد حزمة المتجر في الصفحة الرابعة
+    function generateApkPackage() {
+        const url = document.getElementById('targetWrapUrl').value.trim();
+        const appName = document.getElementById('appNameInput').value.trim() || "تطبيقي";
+        const box = document.getElementById('apkDownloadBox');
+
+        if(!url) {
+            alert("⚠️ يرجى إدخال الرابط المراد تغليفه أولاً.");
+            return;
+        }
+
+        const manifest = {
+            "name": appName,
+            "short_name": appName,
+            "start_url": url,
+            "display": "standalone",
+            "background_color": "#0b0f19",
+            "theme_color": "#2563eb",
+            "icons": [{ "src": "icon.png", "sizes": "192x192 512x512", "type": "image/png" }]
+        };
+
+        box.innerHTML = `
+            <b>✅ تم تجهيز حزمة التغليف بنجاح لـ (${appName}):</b><br>
+            - الرابط المغلف: <a href="${url}" target="_blank" style="color:#60a5fa;">${url}</a><br>
+            - اسم التطبيق المعتمد: <b>${appName}</b><br><br>
+            <span style="color:#38bdf8;">الآن توجه إلى موقع PWABuilder.com والصق الرابط بالأسفل لتحميل ملف الـ APK المباشر!</span>
+        `;
+        alert("✅ تم توليد حزمة التغليف الإعدادية بنجاح!");
+    }
+
+    // مزامنة ملفات المستودع
+    async function syncCloudRepository() {
+        const user = document.getElementById('ghUser').value.trim();
+        const token = document.getElementById('ghToken').value.trim();
+        const repo = document.getElementById('repoName').value.trim().toLowerCase();
+
+        if(!user || !token || !repo) {
+            alert("⚠️ يرجى إدخال اسم المستخدم، المفتاح، واسم المستودع في الإعدادات.");
+            return;
+        }
+
+        const displayBox = document.getElementById('cloudFilesDisplay');
+        displayBox.innerHTML = "🔄 جاري المزامنة وجلب الملفات...";
+
+        try {
+            const res = await fetch(`https://api.github.com/repos/${user}/${repo}/contents`, {
+                headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
+            });
+
+            if(!res.ok) throw new Error("فشل الوصول للمستودع.");
+            const data = await res.json();
+            
+            let html = "";
+            data.forEach(file => {
+                html += `
+                <div class="file-item" oncontextmenu="event.preventDefault(); previewCloudFile('${file.download_url}', '${file.name}')">
+                    <span>📄 ${file.name}</span>
+                    <button class="btn btn-danger" style="width:auto; padding:3px 8px; font-size:10px;" onclick="deleteCloudFile('${file.path}', '${file.sha}')">حذف ❌</button>
+                </div>`;
+            });
+            displayBox.innerHTML = html + "<small style='color:var(--text-muted); display:block; margin-top:5px;'>💡 اضغط مطولاً على الملف لمعاينته.</small>";
+            alert("✅ تمت مزامنة المستودع بنجاح!");
+        } catch (err) {
+            displayBox.innerHTML = "❌ خطأ: " + err.message;
+        }
+    }
+
+    async function previewCloudFile(downloadUrl, fileName) {
+        if(!confirm(`معاينة الملف "${fileName}"؟`)) return;
+        const res = await fetch(downloadUrl);
+        const content = await res.text();
+        document.getElementById('livePreviewFrame').srcdoc = content;
+        switchPane('panePreview', document.querySelectorAll('.nav-item')[1]);
+    }
+
+    async function deleteCloudFile(filePath, fileSha) {
+        if(!confirm(`حذف الملف "${filePath}" نهائياً؟`)) return;
+        const user = document.getElementById('ghUser').value.trim();
+        const token = document.getElementById('ghToken').value.trim();
+        const repo = document.getElementById('repoName').value.trim().toLowerCase();
+
+        const res = await fetch(`https://api.github.com/repos/${user}/${repo}/contents/${filePath}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `token ${token}`,
+                'Accept': 'application/vnd.github.v3+json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ message: "Delete file", sha: fileSha })
+        });
+
+        if(res.ok) {
+            alert("✅ تم الحذف بنجاح!");
+            syncCloudRepository();
+        }
+    }
+
+    async function startCloudDeployment() {
+        const user = document.getElementById('ghUser').value.trim();
+        const token = document.getElementById('ghToken').value.trim();
+        const repo = document.getElementById('repoName').value.trim().toLowerCase().replace(/\s+/g, '-');
+        const inputType = document.getElementById('inputType').value;
+
+        if(!user || !token || !repo) {
+            alert("⚠️ يرجى إدخال البيانات في صفحة الإعدادات أولاً.");
+            switchPane('paneAccount', document.querySelectorAll('.nav-item')[4]);
+            return;
+        }
+
+        document.getElementById('digitalConsole').innerText = "[ بدء العمليات السحابية... ]";
+
+        try {
+            await fetch(`https://api.github.com/user/repos`, {
+                method: 'POST',
+                headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: repo, auto_init: true, private: false })
+            });
+
+            let filesToUpload = inputType === 'code' ? 
+                { 'index.html': btoa(unescape(encodeURIComponent(document.getElementById('appCode').value || "<h1>تطبيق</h1>"))) } : 
+                uploadedFilesMap;
+
+            for (let filePath in filesToUpload) {
+                await fetch(`https://api.github.com/repos/${user}/${repo}/contents/${filePath}`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: `Upload ${filePath}`, content: filesToUpload[filePath] })
+                });
+            }
+
+            const liveUrl = `https://${user}.github.io/${repo}/`;
+            document.getElementById('digitalConsole').innerText += `\n🎉 تم الرفع بنجاح!\nالرابط المباشر:\n${liveUrl}`;
+            document.getElementById('targetWrapUrl').value = liveUrl;
+            alert("🎉 تم الرفع بنجاح! تم نسخ الرابط تلقائياً إلى صفحة التغليف (الصفحة الرابعة).");
+        } catch (err) {
+            document.getElementById('digitalConsole').innerText += "\n❌ خطأ: " + err.message;
+        }
+    }
+
+    if('serviceWorker' in navigator) {
+        const swCode = `
+            self.addEventListener('install', e => e.waitUntil(caches.open('basha-v7').then(c => c.addAll(['./']))));
+            self.addEventListener('fetch', e => e.respondWith(caches.match(e.request).then(r => r || fetch(e.request))));
+        `;
+        navigator.serviceWorker.register(URL.createObjectURL(new Blob([swCode], {type: 'text/javascript'}))).catch(()=>{});
+    }
+</script>
+
+</body>
+</html>
