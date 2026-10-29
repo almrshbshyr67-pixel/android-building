@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مشاهدة الفيديو - سراج النور</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="dark-theme">
+    <div class="video-player-container">
+        <div class="video-screen" style="background: #000; display: flex; align-items: center; justify-content: center; position: relative;">
+            <video controls autoplay style="width: 100%; max-height: 250px;" id="mainVideo">
+                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                متصفحك لا يدعم عرض الفيديو
+            </video>
+        </div>
+        
+        <div class="video-details-box">
+            <h2>تلاوة خاشعة من سورة الرحمن كاملة (مؤثرة جداً)</h2>
+            <div class="channel-row">
+                <div class="ch-info">
+                    <div class="avatar-sm">🕌</div>
+                    <div>
+                        <h4>القرآن الكريم</h4>
+                        <p>12.8 مليون مشترك</p>
+                    </div>
+                </div>
+                <button class="btn-subscribe" onclick="toggleSub(this)">اشتراك</button>
+            </div>
+
+            <div class="action-buttons">
+                <button class="action-btn">👍 45 ألف</button>
+                <button class="action-btn">👎</button>
+                <button class="action-btn">🔄 مشاركة</button>
+                <button class="action-btn">⬇️ تنزيل</button>
+                <button class="action-btn" onclick="togglePiP()">📺 نافذة عائمة</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="back-bar">
+        <a href="home.html" class="btn-secondary" style="display:block; text-align:center; padding:10px; margin: 15px;">العودة للرئيسية</a>
+    </div>
+
+    <script>
+        async function togglePiP() {
+            const video = document.getElementById('mainVideo');
+            try {
+                if (document.pictureInPictureElement) {
+                    await document.exitPictureInPicture();
+                } else if (document.pictureInPictureEnabled) {
+                    await video.requestPictureInPicture();
+                }
+            } catch (err) {
+                alert('خاصية النافذة العائمة تتطلب تفاعل المستخدم');
+            }
+        }
+        function toggleSub(btn) {
+            if(btn.innerText === 'اشتراك') {
+                btn.innerText = 'مشترك';
+                btn.style.background = '#444';
+            } else {
+                btn.innerText = 'اشتراك';
+                btn.style.background = '#00C853';
+            }
+        }
+    </script>
+</body>
+</html>
