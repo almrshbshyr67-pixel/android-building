@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سراج النور - الرئيسية</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="dark-theme">
+    <header class="app-header">
+        <div class="logo-area">
+            <span class="header-icon">🕌</span>
+            <h2>سراج النور</h2>
+        </div>
+        <div class="header-actions">
+            <a href="settings.html" class="icon-btn">⚙️</a>
+            <a href="auth.html" class="icon-btn">👤</a>
+        </div>
+    </header>
+
+    <nav class="categories-bar">
+        <button class="cat-pill active">الكل</button>
+        <button class="cat-pill">محاضرات</button>
+        <button class="cat-pill">تلاوات</button>
+        <button class="cat-pill">قصص الأنبياء</button>
+        <button class="cat-pill">فتاوى</button>
+    </nav>
+
+    <main class="main-content">
+        <div class="featured-card" onclick="location.href='watch.html'">
+            <div class="video-thumbnail" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?auto=format&fit=crop&w=800&q=80') center/cover;">
+                <span class="badge">مميز</span>
+                <span class="duration">32:15</span>
+            </div>
+            <div class="video-info">
+                <h3>أهمية الصلاة في حياة المسلم</h3>
+                <p>محاضرة مؤثرة • الشيخ د. محمد العريفي</p>
+            </div>
+        </div>
+
+        <section class="section-title">
+            <h3>مقاطع مقترحة لك</h3>
+        </section>
+
+        <div class="video-list">
+            <div class="video-item" onclick="location.href='watch.html'">
+                <div class="thumb-sm" style="background: url('https://images.unsplash.com/photo-1609599006353-e629aaabfeae?auto=format&fit=crop&w=400&q=80') center/cover;">
+                    <span class="duration">1:02:34</span>
+                </div>
+                <div class="info-sm">
+                    <h4>تلاوة خاشعة من سورة الرحمن كاملة</h4>
+                    <p>القرآن الكريم • 2.4 مليون مشاهدة</p>
+                </div>
+            </div>
+            <div class="video-item" onclick="location.href='watch.html'">
+                <div class="thumb-sm" style="background: url('https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?auto=format&fit=crop&w=400&q=80') center/cover;">
+                    <span class="duration">45:20</span>
+                </div>
+                <div class="info-sm">
+                    <h4>كيف تعيش حياة طيبة؟ (محاضرة إسلامية)</h4>
+                    <p>د. محمد العريفي • 1.8 مليون مشاهدة</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <nav class="bottom-nav">
+        <a href="home.html" class="nav-item active">🏠<span>الرئيسية</span></a>
+        <a href="home.html" class="nav-item">🧭<span>استكشاف</span></a>
+        <a href="channel.html" class="nav-item">➕<span>إضافة</span></a>
+        <a href="home.html" class="nav-item">📺<span>اشتراكات</span></a>
+        <a href="settings.html" class="nav-item">📁<span>المكتبة</span></a>
+    </nav>
+</body>
+</html>
