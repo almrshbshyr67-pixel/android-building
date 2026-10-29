@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول - سراج النور</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="auth-body">
+    <div class="auth-card">
+        <h2>سراج النور</h2>
+        <p>تسجيل الدخول لمتابعة محتوك المفضّل</p>
+        
+        <form onsubmit="event.preventDefault(); alert('تم تسجيل الدخول بنجاح عبر Supabase!'); location.href='home.html';">
+            <input type="email" placeholder="البريد الإلكتروني أو رقم الهاتف" required class="auth-input">
+            <input type="password" placeholder="كلمة المرور" required class="auth-input">
+            <button type="submit" class="btn-primary" style="width:100%; margin-top:10px;">تسجيل الدخول</button>
+        </form>
+
+        <div class="divider">أو</div>
+
+        <button class="btn-google" onclick="loginWithGoogle()">
+            <span>🌐</span> متابعة عبر Google
+        </button>
+
+        <div class="auth-footer">
+            <a href="home.html">تخطي والدخول كضيف</a>
+        </div>
+    </div>
+
+    <script src="js/supabase.js"></script>
+</body>
+</html>
